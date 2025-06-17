@@ -15,15 +15,19 @@ class AuthenticatedSessionController extends Controller
     }
 
     public function store(LoginRequest $request)
-        {
+    {
         $request->authenticate();
         $request->session()->regenerate();
 
-        if (auth()->user()->email === 'admin@gmail.com') {
-            return redirect()->intended('/admin');
-        }
+        $user = auth()->user();
 
-        return redirect()->intended('/dashboard');
+        if ($user->is_admin) {
+            return redirect()->intended('/admin');
+        } elseif ($user->is_manager) {
+            return redirect()->intended('/manager');
+        } else {
+            return redirect()->intended('/dashboard');
+        }
     }
 
     public function destroy(Request $request)

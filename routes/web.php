@@ -62,3 +62,22 @@ Route::middleware(['auth'])->group(function () {
         Route::post('permissions', [ProductPermissionController::class, 'giveAccess'])->name('give.permission');
     });
 });
+Route::middleware(['auth', 'is_manager'])->group(function () {
+    Route::get('/manager', function () {
+        return view('manager.dashboard');
+    })->name('manager.dashboard');
+});
+
+use Illuminate\Support\Facades\Auth;
+
+Route::get('/redirect-after-login', function () {
+    $user = Auth::user();
+
+    if ($user->is_admin) {
+        return redirect()->route('admin.dashboard');
+    } elseif ($user->is_manager) {
+        return redirect()->route('manager.dashboard');
+    } else {
+        return redirect()->route('dashboard');
+    }
+});

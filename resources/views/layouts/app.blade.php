@@ -10,14 +10,25 @@
         <div class="container">
 
             {{-- Panel Yönlendirmesi --}}
-            @auth
-                @php
-                    $user = auth()->user();
-                    $isAdmin = $user->is_admin;
-                    $isManager = $user->is_manager ?? false;
-                    $panelRoute = $isAdmin ? route('admin.dashboard') : route('dashboard');
-                    $productRoute = $isAdmin ? route('admin.products.index') : route('products.index');
-                @endphp
+                        @auth
+                            @php
+                $user = auth()->user();
+                $isAdmin = $user->is_admin;
+                $isManager = $user->is_manager ?? false;
+
+                // Admin Panel butonu yönlendirmesi
+                $panelRoute = $isAdmin
+                    ? route('admin.dashboard')
+                    : ($isManager
+                        ? route('manager.dashboard')
+                        : route('dashboard'));
+
+                // Products yönlendirmesi
+                $productRoute = $isAdmin
+                    ? route('admin.products.index')
+                    : route('products.index');
+            @endphp
+
 
                 <a class="navbar-brand" href="{{ $panelRoute }}">Admin Panel</a>
             @else
