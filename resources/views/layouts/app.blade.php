@@ -9,34 +9,44 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
 
-            {{-- Admin Panel logosu yönlendirme --}}
+            {{-- Panel Yönlendirmesi --}}
             @auth
                 @php
-                    $isAdmin = auth()->user()->is_admin;
+                    $user = auth()->user();
+                    $isAdmin = $user->is_admin;
+                    $isManager = $user->is_manager ?? false;
                     $panelRoute = $isAdmin ? route('admin.dashboard') : route('dashboard');
+                    $productRoute = $isAdmin ? route('admin.products.index') : route('products.index');
                 @endphp
+
                 <a class="navbar-brand" href="{{ $panelRoute }}">Admin Panel</a>
             @else
                 <a class="navbar-brand" href="/">Admin Panel</a>
             @endauth
 
+            {{-- Butonlar --}}
             <div class="d-flex">
                 @auth
-                    @php
-                        $productRoute = $isAdmin ? route('admin.products.index') : route('products.index');
-                    @endphp
-
-                    {{-- Products --}}
+                    {{-- Products butonu (herkes görür, ama yönlendirme farklı) --}}
                     <a href="{{ $productRoute }}" class="btn btn-outline-dark me-2">Products</a>
 
-                    {{-- My Licenses (sadece kullanıcılar için) --}}
+                    {{-- My Licenses (admin olmayan herkes için) --}}
                     @if(!$isAdmin)
                         <a href="{{ route('licenses.index') }}" class="btn btn-outline-success me-2">My Licenses</a>
                     @endif
 
-                    {{-- Raporlar (sadece admin için) --}}
+
+                    {{-- Reports (sadece admin) --}}
                     @if($isAdmin)
                         <a href="{{ route('admin.reports') }}" class="btn btn-outline-primary me-2">Reports</a>
+
+                        {{-- Yetkilendirme (sadece admin) --}}
+                        <a href="{{ route('admin.authorize') }}" class="btn btn-outline-warning me-2">Yetkilendirme</a>
+                    @endif
+
+                    {{-- Kullanım Yetkisi (sadece manager) --}}
+                    @if($isManager)
+                        <a href="{{ route('manager.permissions') }}" class="btn btn-outline-info me-2">Kullanım Yetkisi</a>
                     @endif
 
                     {{-- Logout --}}

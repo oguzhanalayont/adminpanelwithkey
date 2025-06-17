@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\AuthorizationController;
+use App\Http\Controllers\Manager\ProductPermissionController;
 use App\Http\Controllers\ProductViewController;
 
 Route::get('/', function () {
@@ -26,7 +28,7 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
-Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
@@ -49,3 +51,14 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 });
 Route::post('/licenses/purchase', [App\Http\Controllers\LicenseController::class, 'purchase'])->name('licenses.purchase');
 
+Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('authorize', [AuthorizationController::class, 'index'])->name('authorize');
+    Route::post('authorize', [AuthorizationController::class, 'assignManager'])->name('assign.manager');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::middleware('is_manager')->prefix('manager')->name('manager.')->group(function () {
+        Route::get('permissions', [ProductPermissionController::class, 'index'])->name('permissions');
+        Route::post('permissions', [ProductPermissionController::class, 'giveAccess'])->name('give.permission');
+    });
+});

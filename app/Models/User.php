@@ -49,4 +49,17 @@ class User extends Authenticatable
         return $this->hasMany(\App\Models\License::class);
     }
 
+    // App\Models\User.php
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isManager()
+    {
+        return $this->role === 'manager';
+    }
+
+
 }
