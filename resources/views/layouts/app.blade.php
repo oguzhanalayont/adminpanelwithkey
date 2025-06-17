@@ -30,9 +30,9 @@
             @endphp
 
 
-                <a class="navbar-brand" href="{{ $panelRoute }}">Admin Panel</a>
+                <a class="navbar-brand" href="{{ $panelRoute }}">Control Panel</a>
             @else
-                <a class="navbar-brand" href="/">Admin Panel</a>
+                <a class="navbar-brand" href="/">Control Panel</a>
             @endauth
 
             {{-- Butonlar --}}
@@ -45,6 +45,9 @@
                     @if(!$isAdmin)
                         <a href="{{ route('licenses.index') }}" class="btn btn-outline-success me-2">My Licenses</a>
                     @endif
+                    @if($isManager)
+                    <a href="{{ route('manager.create.user') }}" class="btn btn-outline-info me-2">Add User</a>
+                    @endif
 
 
                     {{-- Reports (sadece admin) --}}
@@ -52,12 +55,12 @@
                         <a href="{{ route('admin.reports') }}" class="btn btn-outline-primary me-2">Reports</a>
 
                         {{-- Yetkilendirme (sadece admin) --}}
-                        <a href="{{ route('admin.authorize') }}" class="btn btn-outline-warning me-2">Yetkilendirme</a>
+                        <a href="{{ route('admin.authorize') }}" class="btn btn-outline-warning me-2">Authorization</a>
                     @endif
 
                     {{-- Kullanım Yetkisi (sadece manager) --}}
                     @if($isManager)
-                        <a href="{{ route('manager.permissions') }}" class="btn btn-outline-info me-2">Kullanım Yetkisi</a>
+                        <a href="{{ route('manager.permissions') }}" class="btn btn-outline-info me-2">Authorization to Use</a>
                     @endif
 
                     {{-- Logout --}}

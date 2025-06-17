@@ -30,5 +30,10 @@ return [
     'max_age' => 0,
 
     'supports_credentials' => false,
+    'paths' => ['api/*'],
+
+    'allowed_origins' => [
+        'http://127.0.0.1:8001',
+    ],
 
 ];

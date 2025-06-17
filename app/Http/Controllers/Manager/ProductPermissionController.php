@@ -28,7 +28,7 @@ class ProductPermissionController extends Controller
     $existingLicense = License::findOrFail($request->license_id);
 
     if ($targetUser) {
-        // Yeni bir lisans oluştur ve bu kullanıcıya ata (aynı ürünle)
+        // Kullanıcıya ürün kullanım yetkisi ver
         License::create([
             'user_id' => $targetUser->id,
             'product_id' => $existingLicense->product_id,
@@ -38,9 +38,14 @@ class ProductPermissionController extends Controller
             'is_active' => false,
         ]);
 
-        return back()->with('success', 'Kullanıcıya ürün kullanım yetkisi verildi.');
+        // Not defteri kullanım yetkisi ver
+        $targetUser->can_use_notepad = true;
+        $targetUser->save();
+
+        return back()->with('success', 'Kullanıcıya ürün ve not defteri kullanım yetkisi verildi.');
     }
 
     return back()->with('error', 'Kullanıcı bulunamadı.');
 }
+
 }

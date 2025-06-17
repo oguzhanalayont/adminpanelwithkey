@@ -2,18 +2,49 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Http\Controllers\Api\UserAccessController;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| Kullanıcı Giriş Doğrulama
 |--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
 */
+Route::post('/authenticate', function (Request $request) {
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required',
+    ]);
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    $user = User::where('email', $request->email)->first();
+
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json([
+            'message' => 'Geçersiz kullanıcı bilgileri.'
+        ], 401);
+    }
+
+    if (!$user->can_use_notepad) {
+        return response()->json([
+            'message' => 'Bu kullanıcı not defteri uygulamasını kullanamaz.'
+        ], 403);
+    }
+
+    return response()->json([
+        'message' => 'Giriş başarılı.',
+        'user' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+        ]
+    ]);
 });
+
+/*
+|--------------------------------------------------------------------------
+| Belirli Ürün İçin Yetkili Kullanıcılar (product_id bazlı)
+|--------------------------------------------------------------------------
+| Örn: /api/authorized-users/notepad
+*/
+Route::get('/authorized-users/{productName}', [UserAccessController::class, 'authorized']);

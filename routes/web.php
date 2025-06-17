@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\AuthorizationController;
 use App\Http\Controllers\Manager\ProductPermissionController;
 use App\Http\Controllers\ProductViewController;
+use App\Http\Controllers\Manager\UserCreateController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -80,4 +81,9 @@ Route::get('/redirect-after-login', function () {
     } else {
         return redirect()->route('dashboard');
     }
+});
+
+Route::middleware(['auth', 'is_manager'])->prefix('manager')->name('manager.')->group(function () {
+    Route::get('/create-user', [\App\Http\Controllers\Manager\UserCreateController::class, 'create'])->name('create.user');
+    Route::post('/create-user', [\App\Http\Controllers\Manager\UserCreateController::class, 'store'])->name('store.user');
 });
