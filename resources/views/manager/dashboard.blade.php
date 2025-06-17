@@ -2,5 +2,5 @@
 
 @section('content')
     <h2>Manager Panel</h2>
-    <p>Burada sadece manager rolüne sahip kullanıcılar işlem yapabilir.</p>
+    <p>Only can Manager can access this panel.</p>
 @endsection

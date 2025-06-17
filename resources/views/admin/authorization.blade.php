@@ -1,16 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-    <h3>Manager Yetkilendirme</h3>
-    @if(session('success')) <div class="alert alert-success">{{ session('success') }}</div> @endif
-    @if(session('error')) <div class="alert alert-danger">{{ session('error') }}</div> @endif
+<div class="container">
+    <h3>Kullanıcılara Manager Yetkisi Ver</h3>
 
-    <form method="POST" action="{{ route('admin.assign.manager') }}">
+    <form action="{{ route('admin.assign.manager') }}" method="POST">
         @csrf
+
         <div class="mb-3">
-            <label>Email Adresi</label>
-            <input type="email" name="email" class="form-control" required>
+            <label for="email" class="form-label">Kullanıcı Seç</label>
+            <select name="email" class="form-select" required>
+                <option value="" disabled selected>Kullanıcı seçin</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->email }}">{{ $user->name }} - {{ $user->email }}</option>
+                @endforeach
+            </select>
         </div>
-        <button class="btn btn-primary">Yetkilendir</button>
+
+        <button type="submit" class="btn btn-primary">Yetki Ver</button>
     </form>
+</div>
 @endsection

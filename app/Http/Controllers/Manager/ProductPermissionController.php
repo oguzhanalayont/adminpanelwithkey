@@ -11,8 +11,11 @@ class ProductPermissionController extends Controller
 {
     public function index()
     {
-        return view('manager.permissions');
+        $users = \App\Models\User::where('is_admin', false)->where('is_manager', false)->get();
+        $licenses = auth()->user()->licenses()->with('product')->get();
+        return view('manager.permissions', compact('users', 'licenses'));
     }
+
 
     public function giveAccess(Request $request)
 {

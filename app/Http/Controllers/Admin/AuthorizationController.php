@@ -10,8 +10,10 @@ class AuthorizationController extends Controller
 {
     public function index()
     {
-        return view('admin.authorization');
+        $users = \App\Models\User::where('is_admin', false)->get();
+        return view('admin.authorization', compact('users'));
     }
+
 
     public function assignManager(Request $request)
     {
