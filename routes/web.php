@@ -87,3 +87,6 @@ Route::middleware(['auth', 'is_manager'])->prefix('manager')->name('manager.')->
     Route::get('/create-user', [\App\Http\Controllers\Manager\UserCreateController::class, 'create'])->name('create.user');
     Route::post('/create-user', [\App\Http\Controllers\Manager\UserCreateController::class, 'store'])->name('store.user');
 });
+
+Route::patch('/admin/revoke-manager/{id}', [App\Http\Controllers\Admin\AuthorizationController::class, 'revokeManager'])
+    ->name('admin.revoke.manager');

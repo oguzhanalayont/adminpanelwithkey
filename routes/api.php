@@ -5,12 +5,15 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Http\Controllers\Api\UserAccessController;
-
+use App\Http\Controllers\Admin\UsageController;
 /*
 |--------------------------------------------------------------------------
 | Kullanıcı Giriş Doğrulama
 |--------------------------------------------------------------------------
 */
+Route::post('/usage/start', [UsageController::class, 'start']);
+Route::post('/usage/stop', [UsageController::class, 'stop']);
+
 Route::post('/authenticate', function (Request $request) {
     $request->validate([
         'email' => 'required|email',

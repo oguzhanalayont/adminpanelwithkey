@@ -9,10 +9,13 @@ use Illuminate\Http\Request;
 class AuthorizationController extends Controller
 {
     public function index()
-    {
-        $users = \App\Models\User::where('is_admin', false)->get();
-        return view('admin.authorization', compact('users'));
-    }
+{
+    $users = User::where('is_admin', false)->get();
+    $managers = User::where('role', 'manager')->get();
+
+    return view('admin.authorization', compact('users', 'managers'));
+}
+
 
 
     public function assignManager(Request $request)
@@ -29,5 +32,14 @@ class AuthorizationController extends Controller
 
         return back()->with('error', 'Kullanıcı bulunamadı.');
     }
+    public function revokeManager($id)
+{
+    $user = \App\Models\User::findOrFail($id);
+    $user->role = 'user'; // veya null, sistemine göre değişebilir
+    $user->save();
+
+    return redirect()->back()->with('success', 'Manager yetkisi kaldırıldı.');
+}
+
 }
 
